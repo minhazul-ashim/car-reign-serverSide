@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const { MongoClient } = require('mongodb');
 const { config } = require('dotenv');
+const ObjectId = require('mongodb').ObjectId;
 require('dotenv').config();
 
 const port = process.env.PORT || 5000;
@@ -24,6 +25,8 @@ async function run() {
         const database = client.db('carReign');
         const carCollection = database.collection('carCollection');
         const reviewCollection = database.collection('reviews')
+
+
         //API to get the car collection from the database;
         app.get('/cars', async (req, res) => {
 
@@ -35,8 +38,20 @@ async function run() {
 
         //API to get the reviews collection from the database;
         app.get('/reviews', async (req, res) => {
+
             const cursor = reviewCollection.find({});
             const result = await cursor.toArray();
+
+            res.send(result)
+        })
+
+        //API to get the specific car information;
+        app.get('/carinfo/:id', async (req, res) => {
+
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) }
+
+            const result = await carCollection.findOne(query);
 
             res.send(result)
         })
