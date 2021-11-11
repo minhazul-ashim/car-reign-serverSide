@@ -24,7 +24,8 @@ async function run() {
 
         const database = client.db('carReign');
         const carCollection = database.collection('carCollection');
-        const reviewCollection = database.collection('reviews')
+        const reviewCollection = database.collection('reviews');
+        const orderCollection = database.collection('orders')
 
 
         //API to get the car collection from the database;
@@ -54,6 +55,15 @@ async function run() {
             const result = await carCollection.findOne(query);
 
             res.send(result)
+        })
+
+        //API to add a order into the database;
+        app.post('/orders', async (req, res) => {
+
+            const doc = req.body;
+            const result = await orderCollection.insertOne(doc);
+
+            res.json(result);
         })
 
     }
