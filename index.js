@@ -120,8 +120,9 @@ async function run() {
         /*-------------------------
          Admin Access API's
          ----------------------- */
+        //API for making a new admin for the application;
 
-        app.put('/makeadmin', async (req, res) => {
+        app.put('/admin', async (req, res) => {
 
             const email = req.body.email;
             const filter = { email: email }
@@ -132,6 +133,19 @@ async function run() {
                 }
             }
             const result = await userCollection.updateOne(filter, doc, options)
+        })
+
+        //API for checking if an user is an admin or not;
+        app.get('/admin/:email', async (req, res) => {
+
+            const email = req.params.email;
+            const query = { email: email };
+            let admin = false;
+            const result = await userCollection.findOne(query);
+            if (result?.role === 'Admin') {
+                admin = true;
+            }
+            res.json(admin)
         })
     }
     finally {
