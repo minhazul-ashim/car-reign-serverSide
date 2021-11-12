@@ -25,7 +25,8 @@ async function run() {
         const database = client.db('carReign');
         const carCollection = database.collection('carCollection');
         const reviewCollection = database.collection('reviews');
-        const orderCollection = database.collection('orders')
+        const orderCollection = database.collection('orders');
+        const userCollection = database.collection('users')
 
 
         //API to get the car collection from the database;
@@ -90,6 +91,28 @@ async function run() {
 
             const doc = req.body;
             const result = await reviewCollection.insertOne(doc);
+
+            res.json(result)
+        })
+
+        //API to post an user information from the registration page into the database;
+        app.post('/users', async (req, res) => {
+
+            const doc = req.body;
+            const result = await userCollection.insertOne(doc);
+
+            res.json(result)
+        })
+
+        //API to check if an google logged in users data is already in the database or not;
+        app.put('/users', async (req, res) => {
+
+            const { email, name } = req.body;
+            const filter = { email: email }
+            const options = { upsert: true }
+            const doc = { $set: { email: email, name: name } };
+
+            const result = await userCollection.updateOne(filter, doc, options);
 
             res.json(result)
         })
