@@ -75,7 +75,7 @@ async function run() {
 
             res.json(result);
         })
-        
+
         //API to cancel an order;
         app.delete('/orders/:id', async (req, res) => {
 
@@ -83,6 +83,15 @@ async function run() {
             const cursor = await orderCollection.deleteOne({ _id: ObjectId(id) })
 
             res.json(cursor);
+        })
+
+        //API to post a review;
+        app.post('/reviews', async (req, res) => {
+
+            const doc = req.body;
+            const result = await reviewCollection.insertOne(doc);
+
+            res.json(result)
         })
     }
     finally {
