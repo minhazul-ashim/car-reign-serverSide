@@ -116,6 +116,23 @@ async function run() {
 
             res.json(result)
         })
+
+        /*-------------------------
+         Admin Access API's
+         ----------------------- */
+
+        app.put('/makeadmin', async (req, res) => {
+
+            const email = req.body.email;
+            const filter = { email: email }
+            const options = { upsert: false }
+            const doc = {
+                $set: {
+                    role: 'Admin'
+                }
+            }
+            const result = await userCollection.updateOne(filter, doc, options)
+        })
     }
     finally {
         // client.close();
