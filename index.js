@@ -62,10 +62,15 @@ async function run() {
         app.get('/orders', async (req, res) => {
 
             const email = req.query.email;
-            const cursor = orderCollection.find({ 'email': email })
-            const result = await cursor.toArray();
-
-            res.json(result)
+            if (email) {
+                const cursor = orderCollection.find({ 'email': email })
+                const result = await cursor.toArray();
+                res.json(result)
+            } else {
+                const cursor = orderCollection.find({})
+                const result = await cursor.toArray();
+                res.json(result)
+            }
         })
 
         //API to add a order into the database;
@@ -146,6 +151,23 @@ async function run() {
                 admin = true;
             }
             res.json(admin)
+        })
+
+        //API for setting the status of an order;
+        app.put('/orders', async (req, res) => {
+
+            const id = req.body.id;
+            const status = req.body.status;
+
+            const filter = { _id: ObjectId(id) }
+            const option = { upsert: false }
+            const doc = {
+                $set: {
+                    status: status
+                }
+            }
+            const result = await orderCollection.updateOne(filter, doc, option);
+            res.json(result)
         })
     }
     finally {
