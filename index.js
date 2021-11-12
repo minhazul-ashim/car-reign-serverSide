@@ -57,6 +57,16 @@ async function run() {
             res.send(result)
         })
 
+        //API to get the specific orders for a user;
+        app.get('/orders', async (req, res) => {
+
+            const email = req.query.email;
+            const cursor = orderCollection.find({ 'email': email })
+            const result = await cursor.toArray();
+
+            res.json(result)
+        })
+
         //API to add a order into the database;
         app.post('/orders', async (req, res) => {
 
@@ -65,7 +75,14 @@ async function run() {
 
             res.json(result);
         })
+        //API to cancel an order;
+        app.delete('/orders/:id', async (req, res) => {
 
+            const id = req.params.id;
+            const cursor = await orderCollection.deleteOne({ _id: ObjectId(id) })
+
+            res.json(cursor);
+        })
     }
     finally {
         // client.close();
