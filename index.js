@@ -188,6 +188,17 @@ async function run() {
             const result = await carCollection.insertOne(data);
             res.json(result)
         })
+
+        //API for deleting a product from the collection;
+        app.delete('/cars/:id', async (req, res) => {
+
+            const id = req.params.id;
+            const filter = { _id: ObjectId(id) }
+
+            const result = await carCollection.deleteOne(filter)
+
+            res.json(result)
+        })
     }
     finally {
         // client.close();
