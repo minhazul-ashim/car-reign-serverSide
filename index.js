@@ -180,6 +180,14 @@ async function run() {
 
             res.json(result)
         })
+
+        //API for adding a new product to the collection;
+        app.post('/cars', async (req, res) => {
+
+            const data = req.body;
+            const result = await carCollection.insertOne(data);
+            res.json(result)
+        })
     }
     finally {
         // client.close();
